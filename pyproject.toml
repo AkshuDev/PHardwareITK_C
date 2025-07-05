@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phardwareitk_c"
+version = "0.0.1"
+description = "A C Extension to Pheonix Hardware Interface Toolkit"
+authors = [
+	{ name = "AkshuDev", email = "akshobhyasasun@gmail.com" },
+	{ name = "Pheonix Studios", email = "pheonixstudiosmail@gmail.com" }
+[
+license = {text = "GNU Gpl v3"}
+readme = "README.md"
+requires-python = ">=3.8"
+
+dependencies = ["phardwareitk"]
+
+[project.urls]
+Github = "https://github.com/AkshuDev/PHardwareITK_C"
+Wiki = "https://github.com/AkshuDev/PHardwareITK_C/wiki"
+PHardwareITK = "https://pypi.org/project/phardwareitk"
+Github_PHardwareITK = "https://github.com/AkshuDev/PHardwareITK"
+
+[tool.setuptools.package.find]
+where = "."
+include = ["phardwareitk_c*"]
+
+[tools.setuptools.dynamic]
+readme = {file = ["README.md"]}

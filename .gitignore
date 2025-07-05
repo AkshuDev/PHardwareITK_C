@@ -1,0 +1,20 @@
+# Ignore venv
+.venv/
+
+# __pycache__ and compiled py files
+__pycache__/
+*.pyc
+*.pyo
+
+# Common backup/junk
+*.swp
+*.bak
+*~
+
+# VSCode or PyCharm
+.vscode/
+.idea/
+
+# Geany
+*.geany
+*.geanywb
