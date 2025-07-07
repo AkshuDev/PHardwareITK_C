@@ -4,6 +4,9 @@ from phardwareitk.Extensions import C as _mmodc
 # For the people with VSCode or such IDE
 from typing import *
 
+# For arch detection
+import platform
+
 # Helper function
 def initialize_memory(size:int, debug:bool=False) -> None:
 	"""Initializes the memory"""
@@ -12,10 +15,11 @@ def initialize_memory(size:int, debug:bool=False) -> None:
 
 def reset_memory(size:int, debug:bool=False) -> None:
 	"""Resets the entire memory using the size"""
-	initalize_memory(size, debug)
+	initialize_memory(size, debug)
 
 initalized:bool = False
 
+# Uint
 class uint8_t(_mmodc.Uint8_t):
 	"""Unsigned Integer of size 8 bits [uint8_t]"""
 	def __init__(value:Union[int, str, bytes]) -> None:
@@ -26,7 +30,6 @@ class uint8_t(_mmodc.Uint8_t):
 
 	def __del__() -> None:
 		super().__del__()
-
 
 class uint16_t(_mmodc.Uint16_t):
 	"""Unsigned Integer of size 16 bits [uint16_t]"""
@@ -39,7 +42,6 @@ class uint16_t(_mmodc.Uint16_t):
 	def __del__() -> None:
 		super().__del__()
 
-
 class uint32_t(_mmodc.Uint32_t):
 	"""Unsigned Integer of size 32 bits [uint32_t]"""
 	def __init__(value:Union[int, str, bytes]) -> None:
@@ -50,7 +52,6 @@ class uint32_t(_mmodc.Uint32_t):
 
 	def __del__() -> None:
 		super().__del__()
-
 
 class uint64_t(_mmodc.Uint64_t):
 	"""Unsigned Integer of size 64 bits [uint64_t]"""
@@ -63,9 +64,31 @@ class uint64_t(_mmodc.Uint64_t):
 	def __del__() -> None:
 		super().__del__()
 
+if platform.architecture()[0] == "64bit":
+	class uint(uint64_t):
+		"""Unsigned Integer of size 64 bits [uint]"""
+		def __init__(value:Union[int, str, bytes]) -> None:
+			super().__init__(value)
 
+		def __repr__() -> str:
+			return super().__repr__()
 
-class int8(_mmodc.Int8):
+		def __del__() -> None:
+			super().__del__()
+else:
+	class uint(uint32_t):
+		"""Unsigned Integer of size 32 bits [uint]"""
+		def __init__(value:Union[int, str, bytes]) -> None:
+			super().__init__(value)
+
+		def __repr__() -> str:
+			return super().__repr__()
+
+		def __del__() -> None:
+			super().__del__()
+
+# Int
+class int8_t(_mmodc.Int8):
 	"""Signed Integer of size 8 bits [int8]"""
 	def __init__(value:Union[int, str, bytes]) -> None:
 		super().__init__(value)
@@ -76,8 +99,7 @@ class int8(_mmodc.Int8):
 	def __del__() -> None:
 		super().__del__()
 
-
-class int16(_mmodc.Int16):
+class int16_t(_mmodc.Int16):
 	"""Signed Integer of size 16 bits [int16]"""
 	def __init__(value:Union[int, str, bytes]) -> None:
 		super().__init__(value)
@@ -87,7 +109,6 @@ class int16(_mmodc.Int16):
 
 	def __del__() -> None:
 		super().__del__()
-
 
 class int32_t(_mmodc.Int32):
 	"""Signed Integer of size 32 bits [int32]"""
@@ -100,7 +121,6 @@ class int32_t(_mmodc.Int32):
 	def __del__() -> None:
 		super().__del__()
 
-
 class int64_t(_mmodc.Int64):
 	"""Signed Integer of size 64 bits [int64]"""
 	def __init__(value:Union[int, str, bytes]) -> None:
@@ -111,6 +131,52 @@ class int64_t(_mmodc.Int64):
 
 	def __del__() -> None:
 		super().__del__()
+
+if platform.architecture()[0] == "64bit":
+	class int(int64_t):
+		"""Signed Integer of size 64 bits [int]"""
+		def __init__(value:Union[int, str, bytes]) -> None:
+			super().__init__(value)
+
+		def __repr__() -> str:
+			return super().__repr__()
+
+		def __del__() -> None:
+			super().__del__()
+else:
+	class int(int32_t):
+		"""Signed Integer of size 32 bits [int]"""
+		def __init__(value:Union[int, str, bytes]) -> None:
+			super().__init__(value)
+
+		def __repr__() -> str:
+			return super().__repr__()
+
+		def __del__() -> None:
+			super().__del__()
+
+# Least (typedefs)
+uint_least8_t = uint8_t
+int_least8_t = int8_t
+
+# Fast
+int_fast8_t = int
+int_fast16_t = int
+int_fast32_t = int32_t
+int_fast64_t = int64_t
+uint_fast8_t = uint
+uint_fast16_t = uint
+uint_fast32_t = uint32_t
+uint_fast64_t = uint64_t
+
+# Max
+intmax_t = int64_t
+uintmax_t = uint64_t
+
+# Other types
+char = int8_t
+short = int16_t
+long = int64_t
 
 # MACROS
 # Bit widths (standard)
@@ -137,6 +203,13 @@ IN16_MIN = -32768
 INT32_MIN = -2147483648
 INT64_MIN = -9223372036854775808
 
+# Max values for pointer types
+INTPTR_MIN = INT32_MIN
+
+# Min values for pointer types
+UINTPTR_MAX = UINT64_MAX
+INTPTR_MAX = INT32_MAX
+
 class intptr(int32_t):
 	"""An signed Pointer with size of 4 bytes / 32 bits"""
 	def __init__(self, type:object, object_:Union[object, int]) -> None:
@@ -154,11 +227,11 @@ class intptr(int32_t):
 
 		super().__init__(self.pointer_address)
 
-	def cast(new_type:object) -> None:
+	def cast(self, new_type:object) -> None:
 		"""Casts the pointer to a new type"""
 		self.type = new_type
 
-	def dereference() -> Any:
+	def dereference(self) -> Any:
 		"""Dereferences the pointer"""
 		if isinstance(self.type, _mmodc.Char):
 			return _mmodc.get_string(self)
@@ -166,7 +239,7 @@ class intptr(int32_t):
 		size = _mmodc.get_size_metadata(self.pointer_address - 8)
 		return _mmodc.get_mem(self.pointer_address, size)
 
-	def __repr__() -> str:
+	def __repr__(self) -> str:
 		return f"*{self.pointer_address}"
 
 	def __del__() -> None:
@@ -189,11 +262,11 @@ class uintptr(uint64_t):
 
 		super().__init__(self.pointer_address)
 
-	def cast(new_type:object) -> None:
+	def cast(self, new_type:object) -> None:
 		"""Casts the pointer to a new type"""
 		self.type = new_type
 
-	def dereference() -> Any:
+	def dereference(self) -> Any:
 		"""Dereferences the pointer"""
 		if isinstance(self.type, _mmodc.Char):
 			return _mmodc.get_string(self)
@@ -201,9 +274,9 @@ class uintptr(uint64_t):
 		size = _mmodc.get_size_metadata(self.pointer_address - 8)
 		return _mmodc.get_mem(self.pointer_address, size)
 
-	def __repr__() -> str:
+	def __repr__(self) -> str:
 		return f"*{self.pointer_address}"
 
 	def __del__() -> None:
-		super().__del__() 
+		super().__del__()
 
