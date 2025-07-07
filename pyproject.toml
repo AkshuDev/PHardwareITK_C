@@ -9,7 +9,7 @@ description = "A C Extension to Pheonix Hardware Interface Toolkit"
 authors = [
 	{ name = "AkshuDev", email = "akshobhyasasun@gmail.com" },
 	{ name = "Pheonix Studios", email = "pheonixstudiosmail@gmail.com" }
-[
+]
 license = {text = "GNU Gpl v3"}
 readme = "README.md"
 requires-python = ">=3.8"
