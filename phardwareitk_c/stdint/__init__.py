@@ -1,4 +1,5 @@
 # Main needs
+from phardwareitk_c import *
 from phardwareitk.Extensions import C as _mmodc
 
 # For the people with VSCode or such IDE
@@ -133,7 +134,7 @@ class int64_t(_mmodc.Int64):
 		super().__del__()
 
 if platform.architecture()[0] == "64bit":
-	class int(int64_t):
+	class _int(int64_t):
 		"""Signed Integer of size 64 bits [int]"""
 		def __init__(value:Union[int, str, bytes]) -> None:
 			super().__init__(value)
@@ -144,7 +145,7 @@ if platform.architecture()[0] == "64bit":
 		def __del__() -> None:
 			super().__del__()
 else:
-	class int(int32_t):
+	class _int(int32_t):
 		"""Signed Integer of size 32 bits [int]"""
 		def __init__(value:Union[int, str, bytes]) -> None:
 			super().__init__(value)
@@ -155,13 +156,16 @@ else:
 		def __del__() -> None:
 			super().__del__()
 
+_int = _int
+uint = uint
+
 # Least (typedefs)
 uint_least8_t = uint8_t
 int_least8_t = int8_t
 
 # Fast
-int_fast8_t = int
-int_fast16_t = int
+int_fast8_t = _int
+int_fast16_t = _int
 int_fast32_t = int32_t
 int_fast64_t = int64_t
 uint_fast8_t = uint
@@ -176,7 +180,10 @@ uintmax_t = uint64_t
 # Other types
 char = int8_t
 short = int16_t
-long = int64_t
+long = int32_t # following the C standard
+
+long_long = int64_t # ensures a consistent type of 64 bits
+long_double = double # type alias for double
 
 # MACROS
 # Bit widths (standard)
