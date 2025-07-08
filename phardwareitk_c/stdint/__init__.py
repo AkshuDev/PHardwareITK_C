@@ -65,6 +65,9 @@ class uint64_t(_mmodc.Uint64_t):
 	def __del__() -> None:
 		super().__del__()
 
+class uint:
+    pass
+
 if platform.architecture()[0] == "64bit":
 	class uint(uint64_t):
 		"""Unsigned Integer of size 64 bits [uint]"""
@@ -133,8 +136,11 @@ class int64_t(_mmodc.Int64):
 	def __del__() -> None:
 		super().__del__()
 
+class int_:
+    pass
+
 if platform.architecture()[0] == "64bit":
-	class _int(int64_t):
+	class int_(int64_t):
 		"""Signed Integer of size 64 bits [int]"""
 		def __init__(value:Union[int, str, bytes]) -> None:
 			super().__init__(value)
@@ -145,7 +151,7 @@ if platform.architecture()[0] == "64bit":
 		def __del__() -> None:
 			super().__del__()
 else:
-	class _int(int32_t):
+	class int_(int32_t):
 		"""Signed Integer of size 32 bits [int]"""
 		def __init__(value:Union[int, str, bytes]) -> None:
 			super().__init__(value)
@@ -156,16 +162,13 @@ else:
 		def __del__() -> None:
 			super().__del__()
 
-_int = _int
-uint = uint
-
 # Least (typedefs)
 uint_least8_t = uint8_t
 int_least8_t = int8_t
 
 # Fast
-int_fast8_t = _int
-int_fast16_t = _int
+int_fast8_t = int_
+int_fast16_t = int_
 int_fast32_t = int32_t
 int_fast64_t = int64_t
 uint_fast8_t = uint
@@ -184,6 +187,15 @@ long = int32_t # following the C standard
 
 long_long = int64_t # ensures a consistent type of 64 bits
 long_double = double # type alias for double
+
+unsigned_long = uint64_t # type alias for unsigned long
+
+unsigned_long_long = uint64_t # type alias for unsigned long long
+
+unsigned_short = uint16_t
+unsigned_char = uint8_t # type alias for unsigned char
+
+unsigned_int = uint
 
 # MACROS
 # Bit widths (standard)
