@@ -2,9 +2,11 @@
 from phardwareitk_c import *
 from phardwareitk.Extensions import C as _mmodc
 import math
+import os
 # C libs
 from phardwareitk_c.stdint import *
 from phardwareitk_c.stddef import *
+from phardwareitk_c.limits import *
 
 size_t = size_t # Well idk why but the real stdlib also does this.
 wchar_t = wchar_t # again idk why but the real stdlib also does this.
@@ -55,6 +57,10 @@ def _Exit(status:Union[int, int_]) -> None:
 def atexit(func:Callable) -> None:
     """Registers a function to be called at program exit."""
     pass # TODO: Implement
+
+def system(*args) -> int_:
+    """Runs a shell command."""
+    return int_(os.system(*args))
 
 malloc = _mmodc.malloc
 calloc = _mmodc.calloc
@@ -126,7 +132,7 @@ def strtoll(nptr:Union[_mmodc.CHAR_PTR, str], endptr:_mmodc.Pointer[_mmodc.CHAR_
 
     pass # TODO: Implement
 
-def stroul(nptr:Union[_mmodc.CHAR_PTR, str], endptr:_mmodc.Pointer[_mmodc.CHAR_PTR], base:Union[int, int_]) -> unsigned_long:
+def strtoul(nptr:Union[_mmodc.CHAR_PTR, str], endptr:_mmodc.Pointer[_mmodc.CHAR_PTR], base:Union[int, int_]) -> unsigned_long:
     """Converts a string to an unsigned long."""
     if isinstance(nptr, _mmodc.Pointer):
         nptr = _mmodc.get_string(nptr)
@@ -145,7 +151,26 @@ def stroul(nptr:Union[_mmodc.CHAR_PTR, str], endptr:_mmodc.Pointer[_mmodc.CHAR_P
 
     pass # TODO: Implement
 
-def strtod(nptr:Union[_mmodc.CHAR_PTR, str], endptr:_mmodc.Pointer[_mmodc.CHAR_PTR]) -> float:
+def strtoull(nptr:_mmodc.CHAR_PTR, endptr:_mmodc.Pointer[_mmodc.CHAR_PTR], base:Union[int_, int] -> long_long:
+    """Converts a string to an unsigned long long."""
+    if isinstance(nptr, _mmodc.Pointer):
+        nptr = _mmodc.get_string(nptr)
+
+    if not isinstance(nptr, str):
+        raise TypeError("nptr must be a char*")
+
+    if isinstance(base, int_):
+        base = base.value
+
+    if not isinstance(base, int):
+        raise TypeError("base must be an int.")
+
+    if not isinstance(endptr, _mmodc.Pointer):
+        raise TypeError("endptr must be a char**.")
+
+    pass # TODO: Implement
+
+def strtod(nptr:Union[_mmodc.CHAR_PTR, str], endptr:_mmodc.Pointer[_mmodc.CHAR_PTR]) -> double:
     """Converts a string to a double."""
     if isinstance(nptr, _mmodc.Pointer):
         nptr = _mmodc.get_string(nptr)
@@ -170,6 +195,20 @@ def strtold(nptr:Union[_mmodc.CHAR_PTR, str], endptr:_mmodc.Pointer[_mmodc.CHAR_
         raise TypeError("endptr must be a char**.")
 
     pass # TODO: Implement
+
+def strtof(nptr:Union[_mmodc.CHAR_PTR, str], endptr:_mmodc.Pointer[_mmodc.CHAR_PTR]) -> float:
+    """Converts a string to a float."""
+    if isinstance(nptr, _mmodc.Pointer):
+        nptr = _mmodc.get_string(nptr)
+
+    if not isinstance(nptr, str):
+        raise TypeError("nptr must be a char*")
+
+    if not isinstance(endptr, _mmodc.Pointer):
+        raise TypeError("endptr must be a char**.")
+
+    pass # TODO: Implement
+
 
 def rand() -> int_:
     """Returns a random number."""
